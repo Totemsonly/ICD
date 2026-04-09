@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>检测结果</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>检测结果</h1>
+      <div class="card">
+        <p>总题数：<strong>{{ result.total_questions }}</strong></p>
+        <p>答对题数：<strong>{{ result.correct_count }}</strong></p>
+        <p>得分：<strong>{{ result.score_percent }}%</strong></p>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>题号</th>
+            <th>正确答案</th>
+            <th>识别答案</th>
+            <th>结果</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in result.details %}
+          <tr>
+            <td>{{ item.question }}</td>
+            <td>{{ item.expected }}</td>
+            <td>{{ item.detected }}</td>
+            <td class="{{ 'ok' if item.result == '正确' else 'bad' }}">{{ item.result }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <a class="back" href="/">返回继续识别</a>
+    </div>
+  </body>
+</html>
