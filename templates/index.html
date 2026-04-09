@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>答题卡检测系统</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>答题卡检测系统</h1>
+      <p>上传答题卡图片，并设置正确答案（如：A,B,C,D）。</p>
+
+      {% if error %}
+      <div class="error">{{ error }}</div>
+      {% endif %}
+
+      <form method="post" enctype="multipart/form-data" class="card">
+        <label>答题卡图片</label>
+        <input type="file" name="answer_sheet" accept="image/*" required />
+
+        <label>题目数量</label>
+        <input type="number" name="num_questions" min="1" value="10" required />
+
+        <label>每题选项数量</label>
+        <input type="number" name="options" min="2" max="6" value="4" required />
+
+        <label>正确答案（英文逗号分隔）</label>
+        <textarea name="answer_key" rows="4" placeholder="A,B,C,D,A,B,C,D,A,B" required></textarea>
+
+        <button type="submit">开始识别并评分</button>
+      </form>
+    </div>
+  </body>
+</html>
