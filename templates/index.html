@@ -3,33 +3,56 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>答题卡检测系统</title>
+    <title>OpenCV 客观题自动批改系统</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   </head>
   <body>
     <div class="container">
-      <h1>答题卡检测系统</h1>
-      <p>上传答题卡图片，并设置正确答案（如：A,B,C,D）。</p>
+      <h1>OpenCV 客观题自动批改系统（长答题卡优化版）</h1>
+      <p>支持长图答题卡、多选题评分、自定义每行题数（如 20）。</p>
 
       {% if error %}
       <div class="error">{{ error }}</div>
       {% endif %}
 
       <form method="post" enctype="multipart/form-data" class="card">
-        <label>答题卡图片</label>
+        <label>答题卡图片（jpg/png/bmp/webp）</label>
         <input type="file" name="answer_sheet" accept="image/*" required />
 
-        <label>题目数量</label>
-        <input type="number" name="num_questions" min="1" value="10" required />
+        <div class="row-grid">
+          <div>
+            <label>题目数量</label>
+            <input type="number" name="num_questions" min="1" value="{{ form_data.num_questions }}" required />
+          </div>
+          <div>
+            <label>每题选项数量</label>
+            <input type="number" name="options" min="2" max="8" value="{{ form_data.options }}" required />
+          </div>
+          <div>
+            <label>每行题数（长卡常用 20）</label>
+            <input type="number" name="questions_per_row" min="1" value="{{ form_data.questions_per_row }}" required />
+          </div>
+        </div>
 
-        <label>每题选项数量</label>
-        <input type="number" name="options" min="2" max="6" value="4" required />
+        <label class="check-inline">
+          <input type="checkbox" name="allow_multiple" {% if form_data.allow_multiple %}checked{% endif %} />
+          启用多选题识别与判分
+        </label>
 
-        <label>正确答案（英文逗号分隔）</label>
-        <textarea name="answer_key" rows="4" placeholder="A,B,C,D,A,B,C,D,A,B" required></textarea>
+        <label>正确答案（逗号分隔；多选支持 A+C / A|C / AC）</label>
+        <textarea name="answer_key" rows="5" placeholder="A,C,D,B,A+C,B,AC,D,..." required>{{ form_data.answer_key }}</textarea>
 
         <button type="submit">开始识别并评分</button>
       </form>
+
+      <div class="tips">
+        <h3>长答题卡识别建议</h3>
+        <ul>
+          <li>整张答题卡尽量完整入镜，保持四角可见。</li>
+          <li>建议从正上方拍摄，减少透视变形和卷边。</li>
+          <li>如未识别较多，请优先调整“每行题数”与拍摄清晰度。</li>
+        </ul>
+      </div>
     </div>
   </body>
 </html>

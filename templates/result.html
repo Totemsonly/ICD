@@ -3,17 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>检测结果</title>
+    <title>批改结果</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   </head>
   <body>
     <div class="container">
-      <h1>检测结果</h1>
-      <div class="card">
+      <h1>批改结果</h1>
+      <div class="card result-card">
         <p>总题数：<strong>{{ result.total_questions }}</strong></p>
         <p>答对题数：<strong>{{ result.correct_count }}</strong></p>
         <p>得分：<strong>{{ result.score_percent }}%</strong></p>
+        <p>识别策略：<strong>{{ '长卡网格识别（多选兼容）' if result.method == 'long-sheet-grid' else result.method }}</strong></p>
       </div>
+
+      {% if result.warnings %}
+      <div class="warning">
+        {% for w in result.warnings %}
+        <div>{{ w }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
 
       <table>
         <thead>
